@@ -48,16 +48,23 @@ class MainActivity : ComponentActivity() {
                 ){
                 composable(route="first"){Screeni(navController)}
                 composable(
-                    route="second/{username}",
+                    route="second/{username}/{age}",
                     arguments=listOf(
                         navArgument("username") {
                             type= NavType.StringType
+                        },
+                        navArgument( "age" ) {
+                            type= NavType.StringType
                         }
+
                     )
                 )
 
                 {backStackEntry->
-                    Screeno(navController,backStackEntry.arguments?.getString("username").toString())}
+                    Screeno(navController,
+                        backStackEntry.arguments?.getString("username").toString(),
+                        backStackEntry.arguments?.getString("age").toString())
+                }
 
             }
 
@@ -79,21 +86,32 @@ fun Screeni(navigationController: NavController){
             value=enteredText,
             onValueChange={enteredText=it},
             label ={ Text(text="Name")},
-            placeholder = {Text(text="enter here")}
+            placeholder = {Text(text="enter here name")}
+
+        )
+        var enteredText2 by remember {
+            mutableStateOf("")
+        }
+        TextField(
+            value=enteredText2,
+            onValueChange={enteredText2=it},
+            label ={ Text(text="age")},
+            placeholder = {Text(text="enter here age")}
 
         )
         Button(onClick={
-            navigationController.navigate("second/$enteredText")
+            navigationController.navigate("second/$enteredText/$enteredText2")
         }, shape= filledTonalShape) {
             Text(text="Submit")
         }
     }
 }
 @Composable
-fun Screeno(navigationController: NavController,username: String){
+fun Screeno(navigationController: NavController,username: String,age: String){
     Column (modifier = Modifier.padding(40.dp).fillMaxSize()){
         Text(text="This is the output Screen")
-        Text(text="Hello $username")
+        Text(text="Hello I am $username")
+        Text(text="my age is $age")
         Button(onClick = {
             navigationController.popBackStack()
         }) {
